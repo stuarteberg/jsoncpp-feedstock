@@ -8,14 +8,16 @@ source:
   fn: jsoncpp-{{ version }}.tar.gz
   url: https://github.com/open-source-parsers/jsoncpp/archive/{{ version }}.tar.gz
   sha256: 858db2faf348f89fdf1062bd3e79256772e897e7f17df73e0624edf004f2f9ac
+  patches:
+    # https://github.com/open-source-parsers/jsoncpp/pull/632
+    - vc9-stdint.patch
 
 build:
   number: 0
-  skip: true  # [win or (unix and not py27)]
+  skip: true  # [(win and py36) or (unix and not py27)]
   features:
-    - vc9     # [win and py27]
-    - vc10    # [win and py34]
-    - vc14    # [win and py35]
+    - vc9  # [win and py27]
+    - vc14  # [win and py>=35]
 
 requirements:
   build:
@@ -27,12 +29,12 @@ requirements:
 test:
   requires:
     - python 2.7.*  # [win and py27]
-    - python 3.4.*  # [win and py34]
     - python 3.5.*  # [win and py35]
 
   commands:
     # Verify headers are present.
     - test -f "${PREFIX}/include/json/json.h"      # [unix]
+    - if not exist %PREFIX%\\Library\\include\\json\\json.h exit 1  # [win]
 
     # Verify pkg-config file is present.
     - test -f "${PREFIX}/lib/pkgconfig/jsoncpp.pc"  # [unix]
