@@ -1,4 +1,4 @@
-{% set version = "0.10.6" %}
+{% set version = "1.8.1" %}
 
 package:
   name: jsoncpp
@@ -7,10 +7,10 @@ package:
 source:
   fn: jsoncpp-{{ version }}.tar.gz
   url: https://github.com/open-source-parsers/jsoncpp/archive/{{ version }}.tar.gz
-  sha256: 7c285fc40ad0c113e436a1271c4e38b5017b5c7782c306e90be9d6b2ffa90212
+  sha256: 858db2faf348f89fdf1062bd3e79256772e897e7f17df73e0624edf004f2f9ac
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win or (unix and not py27)]
   features:
     - vc9     # [win and py27]
@@ -32,7 +32,7 @@ test:
 
   commands:
     # Verify headers are present.
-    - test -d "${PREFIX}/include/jsoncpp"           # [unix]
+    - test -f "${PREFIX}/include/json/json.h"      # [unix]
 
     # Verify pkg-config file is present.
     - test -f "${PREFIX}/lib/pkgconfig/jsoncpp.pc"  # [unix]
