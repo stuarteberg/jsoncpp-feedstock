@@ -41,8 +41,7 @@ test:
 
     # Verify libraries are present.
     - test -f "${PREFIX}/lib/libjsoncpp.a"          # [unix]
-    - test -f "${PREFIX}/lib/libjsoncpp.so"         # [linux]
-    - test -f "${PREFIX}/lib/libjsoncpp.dylib"      # [osx]
+    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libjsoncpp${SHLIB_EXT}']"  # [unix]
 
 about:
   home: https://github.com/open-source-parsers/jsoncpp
