@@ -34,6 +34,6 @@ cmake ..\
         -DCMAKE_EXE_LINKER_FLAGS="${LDFLAGS}" \
         -DPYTHON_EXECUTABLE="${PYTHON}"
 
-make
+make -j${CPU_COUNT}
 eval ${LIBRARY_SEARCH_VAR}=$PREFIX/lib make jsoncpp_check
 make install

@@ -2,6 +2,9 @@ mkdir build && cd build
 
 set CMAKE_CONFIG=Release
 
+rem shared libs fail to build, built static instead
+rem https://github.com/open-source-parsers/jsoncpp/issues/631
+
 cmake ^
   -G "NMake Makefiles" ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ^
