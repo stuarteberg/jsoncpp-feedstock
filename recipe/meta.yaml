@@ -11,6 +11,7 @@ source:
 
 build:
   number: 0
+  string: 0_flyem
   skip: true  # [(win and not py27)]
   features:
     - vc9     # [win and py27]
