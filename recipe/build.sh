@@ -8,9 +8,6 @@
 #
 source activate "${CONDA_DEFAULT_ENV}"
 
-export CFLAGS="-fPIC ${CFLAGS}"
-export CXXFLAGS="-fPIC ${CXXFLAGS}"
-
 if [ "$(uname)" == "Darwin" ]
 then
     export LIBRARY_SEARCH_VAR=DYLD_FALLBACK_LIBRARY_PATH
@@ -20,19 +17,17 @@ fi
 
 mkdir build
 cd build
-cmake ..\
-        -DCMAKE_C_COMPILER="${CC}" \
-        -DCMAKE_CXX_COMPILER="${CXX}" \
-        -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
-        -DCMAKE_INSTALL_LIBDIR="${PREFIX}/lib" \
-        -DCMAKE_PREFIX_PATH="${PREFIX}" \
-        -DCMAKE_C_FLAGS="${CFLAGS}" \
-        -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
-        -DBUILD_STATIC_LIBS=1 \
-        -DBUILD_SHARED_LIBS=1 \
-        -DCMAKE_SHARED_LINKER_FLAGS="${LDFLAGS}" \
-        -DCMAKE_EXE_LINKER_FLAGS="${LDFLAGS}" \
-        -DPYTHON_EXECUTABLE="${PYTHON}"
+cmake \
+  -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+  -DCMAKE_INSTALL_LIBDIR="${PREFIX}/lib" \
+  -DCMAKE_PREFIX_PATH="${PREFIX}" \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+  -DBUILD_STATIC_LIBS=1 \
+  -DBUILD_SHARED_LIBS=1 \
+  -DCMAKE_SHARED_LINKER_FLAGS="${LDFLAGS}" \
+  -DCMAKE_EXE_LINKER_FLAGS="${LDFLAGS}" \
+  -DPYTHON_EXECUTABLE="${PYTHON}" \
+  ..
 
 make -j${CPU_COUNT}
 eval ${LIBRARY_SEARCH_VAR}=$PREFIX/lib make jsoncpp_check
