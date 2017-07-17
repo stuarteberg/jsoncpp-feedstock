@@ -1,4 +1,4 @@
-{% set version = "0.10.6" %}
+{% set version = "1.8.1" %}
 
 package:
   name: jsoncpp
@@ -7,15 +7,14 @@ package:
 source:
   fn: jsoncpp-{{ version }}.tar.gz
   url: https://github.com/open-source-parsers/jsoncpp/archive/{{ version }}.tar.gz
-  sha256: 7c285fc40ad0c113e436a1271c4e38b5017b5c7782c306e90be9d6b2ffa90212
+  sha256: 858db2faf348f89fdf1062bd3e79256772e897e7f17df73e0624edf004f2f9ac
 
 build:
-  number: 1
-  skip: true  # [win or (unix and not py27)]
+  number: 0
+  skip: true  # [(win and py36) or (unix and not py27)]
   features:
-    - vc9     # [win and py27]
-    - vc10    # [win and py34]
-    - vc14    # [win and py35]
+    - vc9  # [win and py27]
+    - vc14  # [win and py>=35]
 
 requirements:
   build:
@@ -23,28 +22,29 @@ requirements:
     - cmake
     - pkg-config  # [unix]
     - python
+    - msinttypes  # [win and py27]
 
 test:
   requires:
-    - python 2.7.*  # [win and py27]
-    - python 3.4.*  # [win and py34]
-    - python 3.5.*  # [win and py35]
+    - python {{ environ['PY_VER'] + '*' }}  # [win]
 
   commands:
     # Verify headers are present.
-    - test -d "${PREFIX}/include/jsoncpp"           # [unix]
+    - test -f "${PREFIX}/include/json/json.h"      # [unix]
+    - if not exist %LIBRARY_INC%\\json\\json.h exit 1  # [win]
 
     # Verify pkg-config file is present.
     - test -f "${PREFIX}/lib/pkgconfig/jsoncpp.pc"  # [unix]
 
     # Verify libraries are present.
     - test -f "${PREFIX}/lib/libjsoncpp.a"          # [unix]
-    - test -f "${PREFIX}/lib/libjsoncpp.so"         # [linux]
-    - test -f "${PREFIX}/lib/libjsoncpp.dylib"      # [osx]
+    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libjsoncpp${SHLIB_EXT}']"  # [unix]
+    - if not exist %LIBRARY_LIB%\\jsoncpp.lib exit 1  # [win]
 
 about:
   home: https://github.com/open-source-parsers/jsoncpp
   license: Public Domain/MIT
+  license_file: LICENSE
   summary: A C++ library for interacting with JSON.
 
 extra:
