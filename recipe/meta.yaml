@@ -9,7 +9,7 @@ source:
   url: https://github.com/open-source-parsers/jsoncpp/archive/{{ version }}.tar.gz
 
 build:
-  number: 0
+  number: 4
   skip: true  # [(win and py36) or (unix and not py27)]
   features:
     - vc9  # [win and py27]
