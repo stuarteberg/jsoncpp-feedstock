@@ -9,28 +9,19 @@ source:
   url: https://github.com/open-source-parsers/jsoncpp/archive/{{ version }}.tar.gz
 
 build:
-  number: 4
-  skip: true  # [(win and py36) or (unix and not py27)]
-  features:
-    - vc9  # [win and py27]
-    - vc14  # [win and py>=35]
+  number: 5
 
 requirements:
   build:
     - toolchain
     - cmake
     - pkg-config  # [unix]
-    - python
-    - msinttypes  # [win and py27]
+    - python 2.7*
 
 test:
-  requires:
-    - python {{ environ['PY_VER'] + '*' }}  # [win]
-
   commands:
     # Verify headers are present.
     - test -f "${PREFIX}/include/json/json.h"      # [unix]
-    - if not exist %LIBRARY_INC%\\json\\json.h exit 1  # [win]
 
     # Verify pkg-config file is present.
     - test -f "${PREFIX}/lib/pkgconfig/jsoncpp.pc"  # [unix]
@@ -38,7 +29,6 @@ test:
     # Verify libraries are present.
     - test -f "${PREFIX}/lib/libjsoncpp.a"          # [unix]
     - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libjsoncpp${SHLIB_EXT}']"  # [unix]
-    - if not exist %LIBRARY_LIB%\\jsoncpp.lib exit 1  # [win]
 
 about:
   home: https://github.com/open-source-parsers/jsoncpp
